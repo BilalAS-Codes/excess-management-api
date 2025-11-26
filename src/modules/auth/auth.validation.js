@@ -12,12 +12,13 @@ export const registerSchema = Joi.object({
   region: Joi.string().allow(""),
   industry: Joi.string().required(),
   phone_number: Joi.string().required(),
+  role: Joi.string().required(),
 
   language_preference: Joi.string().valid("en", "ar").default("en"),
-  notification_preferences: Joi.object().default({})
+  notification_preferences: Joi.object().default({}),
 });
 
 export const loginSchema = Joi.object({
   email: Joi.string().email().required(),
-  password: Joi.string().required()
+  password: Joi.string().required(),
 });

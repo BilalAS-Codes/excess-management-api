@@ -34,7 +34,7 @@ export const createUser = async (user) => {
     user.admin_verification_status,
     user.notification_preferences,
     user.language_preference,
-    user.status
+    user.status,
   ];
 
   const result = await pool.query(query, values);
@@ -50,14 +50,11 @@ export const findByEmail = async (email) => {
 };
 
 export const updateLastLogin = async (id) => {
-  await pool.query(
-    "UPDATE users SET last_login = NOW() WHERE id = $1",
-    [id]
-  );
+  await pool.query("UPDATE users SET last_login = NOW() WHERE id = $1", [id]);
 };
 
-export const getUsers = async()=>{
-    const query = `
+export const getUsers = async () => {
+  const query = `
     SELECT
       id, email, company_name, company_name_ar, company_address,
       region, industry, phone_number, role,
@@ -69,5 +66,65 @@ export const getUsers = async()=>{
 
   const result = await pool.query(query);
   return result.rows;
+};
 
-}
+// CREATE SESSION
+export const createSession = async ({ userId, refreshToken }) => {
+  const query = `
+    INSERT INTO user_sessions (
+      id,
+      user_id,
+      jwt_token,
+      device_info,
+      ip_address,
+      expires_at
+    )
+    VALUES (
+      gen_random_uuid(),
+      $1,
+      TRIM($2),
+      '{}'::jsonb,
+      'unknown',
+      NOW() + INTERVAL '7 days'
+    )
+    RETURNING *;
+  `;
+
+  const values = [userId, refreshToken];
+  const result = await pool.query(query, values);
+  return result.rows[0];
+};
+
+// FIND REFRESH TOKEN
+export const findSessionByToken = async (refreshToken) => {
+  const result = await pool.query(
+    `SELECT * FROM user_sessions WHERE TRIM(jwt_token) = TRIM($1) LIMIT 1`,
+    [refreshToken]
+  );
+  return result.rows[0];
+};
+
+// UPDATE REFRESH TOKEN (ROTATION)
+export const updateSessionToken = async (sessionId, newToken) => {
+  const result = await pool.query(
+    `
+    UPDATE user_sessions
+    SET jwt_token = TRIM($1),
+        expires_at = NOW() + INTERVAL '7 days',
+        last_activity = NOW()
+    WHERE id = $2
+    RETURNING *;
+  `,
+    [newToken, sessionId]
+  );
+
+  return result.rows[0];
+};
+
+// DELETE SESSION
+export const deleteSession = async (refreshToken) => {
+  await pool.query(
+    `DELETE FROM user_sessions WHERE TRIM(jwt_token) = TRIM($1)`,
+    [refreshToken]
+  );
+};
