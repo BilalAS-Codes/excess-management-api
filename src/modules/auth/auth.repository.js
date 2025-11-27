@@ -133,3 +133,35 @@ export const deleteSession = async (refreshToken) => {
     [refreshToken]
   );
 };
+
+
+
+
+
+export const saveOtp = async (id, userId, otp_hash, type, expiresAt) => {
+  const query = `
+    INSERT INTO otps (id, user_id, otp_hash, otp_type, expires_at)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING *;
+  `;
+  return (await pool.query(query, [id, userId, otp_hash, type, expiresAt])).rows[0];
+};
+
+export const findOtpByUserAndType = async (userId, type) => {
+  const query = `
+    SELECT *
+    FROM otps
+    WHERE user_id = $1 AND otp_type = $2
+    ORDER BY created_at DESC
+    LIMIT 1;
+  `;
+  return (await pool.query(query, [userId, type])).rows[0];
+};
+
+export const deleteAllOtpsForUser = async (userId) => {
+  await pool.query(`DELETE FROM otps WHERE user_id = $1`, [userId]);
+};
+
+export const deleteOtpById = async (id) => {
+  await pool.query(`DELETE FROM otps WHERE id = $1`, [id]);
+};

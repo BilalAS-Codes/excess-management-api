@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 10
+    },
+    "auditLog": "E:\\developement\\excess-management\\backend\\src\\shared\\logs\\server\\.2c70c1739480eccb393243d61be75c7f1ced6b64-audit.json",
+    "files": [
+        {
+            "date": 1764240860555,
+            "name": "E:\\developement\\excess-management\\backend\\src\\shared\\logs\\server\\combined-2025-11-27.log",
+            "hash": "49e0e58ac8ac6c6b7b34006c99bfd0e713f6f08721b5c8cafde1de11fed7ff35"
+        }
+    ],
+    "hashType": "sha256"
+}

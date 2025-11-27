@@ -17,25 +17,43 @@ export const register = async (req, res, next) => {
   }
 };
 
+
 // LOGIN
 export const login = async (req, res, next) => {
   try {
     const result = await authService.login(req.body);
 
-    return res.json({
+    return res.status(200).json({
       success: true,
-      message:
-        "Login credentials verified. OTP sent to registered email/phone.",
-      data: {
-        email: result.user.email,
-        otpRequired: true,
-        otpMedium: "email_and_sms",
-      },
+      message: "OTP sent to email.",
+      data: result,
     });
   } catch (err) {
     next(err);
   }
 };
+
+// VERIFY LOGIN OTP 
+
+export const verifyLoginOtp = async (req, res, next) => {
+  try {
+    const { user_id, otp_code } = req.body;
+
+    const result = await authService.verifyLoginOtp({
+      userId: user_id,
+      otpCode: otp_code,
+    });
+
+    return res.json({
+      success: true,
+      message: "Login successful",
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 // REFRESH TOKEN
 export const refresh = async (req, res, next) => {
