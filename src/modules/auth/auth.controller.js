@@ -21,7 +21,11 @@ export const register = async (req, res, next) => {
 // LOGIN
 export const login = async (req, res, next) => {
   try {
-    const result = await authService.login(req.body);
+    const result = await authService.login({
+    ...req.body,
+    ip: req.ip,
+    device: req.useragent
+});
 
     return res.status(200).json({
       success: true,
@@ -40,9 +44,12 @@ export const verifyLoginOtp = async (req, res, next) => {
     const { user_id, otp_code } = req.body;
 
     const result = await authService.verifyLoginOtp({
-      userId: user_id,
-      otpCode: otp_code,
-    });
+  userId: user_id,
+  otpCode: otp_code,
+  ip: req.ip,
+  device: req.useragent
+});
+
 
     return res.json({
       success: true,
@@ -66,7 +73,7 @@ export const refresh = async (req, res, next) => {
         message: "Refresh token required",
       });
 
-    const tokens = await authService.refresh(refreshToken);
+    const tokens = await authService.refresh(refreshToken, req.ip, req.useragent);
 
     return res.json({
       success: true,

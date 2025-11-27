@@ -134,6 +134,46 @@ export const deleteSession = async (refreshToken) => {
   );
 };
 
+export const updateSessionDevice = async (sessionId, ip, deviceInfo) => {
+  await pool.query(
+    `UPDATE user_sessions 
+     SET device_info = $1, ip_address = $2 
+     WHERE id = $3`,
+    [deviceInfo, ip, sessionId]
+  );
+};
+
+export const updateSessionActivity = async (sessionId) => {
+  await pool.query(
+    `UPDATE user_sessions 
+     SET last_activity = NOW() 
+     WHERE id = $1`,
+    [sessionId]
+  );
+};
+
+export const getUserSessions = async (userId) => {
+  const result = await pool.query(
+    `SELECT * FROM user_sessions 
+     WHERE user_id = $1 
+     ORDER BY last_activity DESC`,
+    [userId]
+  );
+  return result.rows;
+};
+
+export const deleteAllSessionsForUser = async (userId) => {
+  await pool.query(
+    `DELETE FROM user_sessions WHERE user_id = $1`,
+    [userId]
+  );
+};
+
+
+export const isSessionExpired = (session) => {
+  return new Date(session.expires_at) < new Date();
+};
+
 
 
 

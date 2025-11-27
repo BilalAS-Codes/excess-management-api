@@ -22,3 +22,12 @@ export const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
+
+export const verifyLoginOtpSchema = Joi.object({
+  user_id: Joi.string().uuid().required(),
+  otp_code: Joi.string().length(6).required(),
+});
+
+export const refreshSchema = Joi.object({
+  refreshToken: Joi.string().required(),
+});

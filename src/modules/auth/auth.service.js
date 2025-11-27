@@ -13,7 +13,10 @@ import {
   saveOtp,
   findOtpByUserAndType,
   deleteAllOtpsForUser,
-  deleteOtpById
+  deleteOtpById,
+  updateSessionDevice,
+  updateSessionActivity,
+  isSessionExpired
 } from "./auth.repository.js";
 import { sendEmailOTP } from "../../shared/services/EmailOtp.js";
 import logger from "../../shared/loggers/logger.js";
@@ -43,6 +46,7 @@ export const login = async ({ email, password }) => {
 logger.info("Login attempt started", { meta: { email } });
 try{  
 var user = await findByEmail(email);
+
   if (!user) {
    logger.warn("Login failed: user not found", { meta: { email } });
     throw new Error("User is not registered");
@@ -86,7 +90,7 @@ var user = await findByEmail(email);
 };
 
 // VERIFY LOGIN OTP → return tokens
-export const verifyLoginOtp = async ({ userId, otpCode }) => {
+export const verifyLoginOtp = async ({ userId, otpCode,ip, device }) => {
   logger.info("OTP verification attempt", { meta: { userId } });
   try {
 
@@ -110,8 +114,7 @@ export const verifyLoginOtp = async ({ userId, otpCode }) => {
     throw new Error("Invalid OTP");
   }
 
-  // Delete OTP after use
-  await deleteOtpById(otpRow.id);
+  
   logger.info("OTP successfully validated", { meta: { userId } });
 
   // Generate tokens
@@ -128,10 +131,15 @@ export const verifyLoginOtp = async ({ userId, otpCode }) => {
   );
 
   // Save session
-  await createSession({ userId, refreshToken });
+  const session = await createSession({ userId, refreshToken });
+  await updateSessionDevice(session.id, ip, device);
+await updateSessionActivity(session.id);
+
 
   await updateLastLogin(userId);
   logger.info("Tokens generated successfully", { meta: { userId } });
+  // Delete OTP after use
+  await deleteOtpById(otpRow.id);
 
   return { accessToken, refreshToken };
 
@@ -142,9 +150,14 @@ export const verifyLoginOtp = async ({ userId, otpCode }) => {
 };
 
 //Refresh tokens
-export const refresh = async (refreshToken) => {
+export const refresh = async (refreshToken ,ip, device) => {
   const session = await findSessionByToken(refreshToken);
   if (!session) throw new Error("Invalid refresh token");
+  if (isSessionExpired(session)) {
+  await deleteSession(refreshToken);
+  throw new Error("Session expired");
+}
+
 
   const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
@@ -160,6 +173,9 @@ export const refresh = async (refreshToken) => {
 
   // 🔥 Important fix: TRIM before saving
   await updateSessionToken(session.id, newRefresh);
+  await updateSessionActivity(session.id);
+await updateSessionDevice(session.id, ip, device);
+
 
   return {
     accessToken: newAccess,

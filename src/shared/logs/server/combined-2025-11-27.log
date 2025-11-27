@@ -1,0 +1,20 @@
+2025-11-27T11:13:31.167Z | INFO | Incoming request | {"method":"POST","url":"/api/auth/login","ip":"::1","device":{"os":"unknown","browser":"PostmanRuntime","platform":"unknown","version":"7.49.1"},"userId":null}
+2025-11-27T11:13:31.169Z | INFO | Login attempt started | {"email":"bilalahmsiddique@gmail.com"}
+2025-11-27T11:14:08.394Z | INFO | Incoming request | {"method":"POST","url":"/api/auth/login","ip":"::1","device":{"os":"unknown","browser":"PostmanRuntime","platform":"unknown","version":"7.49.1"},"userId":null}
+2025-11-27T11:14:08.396Z | INFO | Login attempt started | {"email":"bilalahmsiddique@gmail.com"}
+2025-11-27T11:14:13.299Z | INFO | OTP generated | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc","expiresAt":"2025-11-27T11:19:08.719Z"}
+2025-11-27T11:14:39.545Z | INFO | Incoming request | {"method":"POST","url":"/api/auth/login/verify-otp","ip":"::1","device":{"os":"unknown","browser":"PostmanRuntime","platform":"unknown","version":"7.49.1"},"userId":null}
+2025-11-27T11:14:39.546Z | INFO | OTP verification attempt | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc"}
+2025-11-27T11:14:39.799Z | INFO | OTP successfully validated | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc"}
+2025-11-27T11:14:39.827Z | ERROR | OTP verification failed | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc","error":"session is not defined","stack":"ReferenceError: session is not defined\n    at Module.verifyLoginOtp (file:///E:/developement/excess-management/backend/src/modules/auth/auth.service.js:136:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async verifyLoginOtp (file:///E:/developement/excess-management/backend/src/modules/auth/auth.controller.js:46:20)"}
+2025-11-27T11:16:30.304Z | INFO | Incoming request | {"method":"POST","url":"/api/auth/login/verify-otp","ip":"::1","device":{"os":"unknown","browser":"PostmanRuntime","platform":"unknown","version":"7.49.1"},"userId":null}
+2025-11-27T11:16:30.306Z | INFO | OTP verification attempt | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc"}
+2025-11-27T11:16:30.326Z | WARN | OTP verification failed: OTP not found | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc"}
+2025-11-27T11:16:30.326Z | ERROR | OTP verification failed | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc","error":"OTP not found","stack":"Error: OTP not found\n    at Module.verifyLoginOtp (file:///E:/developement/excess-management/backend/src/modules/auth/auth.service.js:100:11)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async verifyLoginOtp (file:///E:/developement/excess-management/backend/src/modules/auth/auth.controller.js:46:20)"}
+2025-11-27T11:19:35.082Z | INFO | Incoming request | {"method":"POST","url":"/api/auth/login","ip":"::1","device":{"os":"unknown","browser":"PostmanRuntime","platform":"unknown","version":"7.49.1"},"userId":null}
+2025-11-27T11:19:35.084Z | INFO | Login attempt started | {"email":"bilalahmsiddique@gmail.com"}
+2025-11-27T11:19:38.694Z | INFO | OTP generated | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc","expiresAt":"2025-11-27T11:24:35.414Z"}
+2025-11-27T11:20:03.270Z | INFO | Incoming request | {"method":"POST","url":"/api/auth/login/verify-otp","ip":"::1","device":{"os":"unknown","browser":"PostmanRuntime","platform":"unknown","version":"7.49.1"},"userId":null}
+2025-11-27T11:20:03.270Z | INFO | OTP verification attempt | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc"}
+2025-11-27T11:20:03.513Z | INFO | OTP successfully validated | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc"}
+2025-11-27T11:20:03.628Z | INFO | Tokens generated successfully | {"userId":"53ebf811-63fa-426e-ad47-3687a2b333bc"}
